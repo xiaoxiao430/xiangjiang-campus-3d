@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#eae8df" />
+    <meta name="description" content="厚德学校香江路校区三维校园导览。旋转、缩放校园，查看中央尖顶主楼、六层食堂楼与250米跑道。" />
+    <title>香江路校区 · 三维校园</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <script type="module" crossorigin src="./assets/index-BTE3G0g2.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-2xzque3C.css">
+  </head>
+  <body>
+    <div id="app">
+      <header class="header">
+        <a class="brand" href="./" aria-label="香江路校区首页">
+          <svg class="brand-mark" viewBox="0 0 40 44" fill="none" aria-hidden="true"><path d="M4 40V17h9v23M27 40V17h9v23M13 40V12l7-9 7 9v28M18 17h4m-4 6h4m-4 6h4M1 40h38" stroke="currentColor" stroke-width="1.8"/><path d="M18 40v-6h4v6" stroke="currentColor" stroke-width="1.8"/></svg>
+          <span><strong>厚德学校</strong><small>香江路校区</small></span>
+        </a>
+        <div class="header-title"><span class="status-dot"></span>三维校园导览</div>
+        <button class="quiet-button" id="reset-button" type="button" aria-label="回到初始视角"><span aria-hidden="true">↺</span> 回到总览</button>
+      </header>
+
+      <main class="workspace">
+        <aside class="sidebar" aria-label="校园场所">
+          <div class="sidebar-intro"><p class="eyebrow">走进香江路校区</p><h1>把校园<br />放在眼前。</h1><p class="intro-copy">四栋教学楼，前后分列，连接中央主楼。</p></div>
+          <div class="campus-facts"><div><strong>6<span>层</span></strong><small>左侧楼</small></div><div><strong>250<span>米</span></strong><small>环形跑道</small></div></div>
+          <div class="section-label">选择一处，靠近看看 <span aria-hidden="true">↘</span></div>
+          <nav id="places" class="places" aria-label="建筑和运动区">
+            <button data-place="central-tower" type="button"><span class="place-index">01</span><span><strong>中央高楼</strong><small>尖顶 · 蓝灰玻璃立面</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="left-side" type="button"><span class="place-index">02</span><span><strong>食堂及住宿楼</strong><small>左前篮球场旁 · 临马路</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="left-front" type="button"><span class="place-index">03</span><span><strong>左侧教学楼</strong><small>5层 · 首层部分镂空</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="right-front" type="button"><span class="place-index">04</span><span><strong>右侧教学楼</strong><small>5层 · 首层部分镂空</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="left-rear" type="button"><span class="place-index">05</span><span><strong>左后副楼</strong><small>7层 · 连接中央高楼</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="right-rear" type="button"><span class="place-index">06</span><span><strong>右后副楼</strong><small>7层 · 连接中央高楼</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="basketball-rear" type="button"><span class="place-index">07</span><span><strong>副楼后半场</strong><small>右后7层副楼后方</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="garden" type="button"><span class="place-index">08</span><span><strong>花园与凉亭</strong><small>左后7层副楼后方</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="track" type="button"><span class="place-index">09</span><span><strong>250米跑道</strong><small>延伸至校园最外侧</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+            <button data-place="grandstand" type="button"><span class="place-index">10</span><span><strong>主席台</strong><small>跑道靠教学楼一侧</small></span><span class="place-arrow" aria-hidden="true">↗</span></button>
+          </nav>
+          <section class="detail-card" id="detail-card" aria-live="polite">
+            <div class="detail-kicker" id="detail-kicker">这一版，按学校说明校正</div>
+            <h2 id="detail-title">熟悉的校园，新的视角</h2>
+            <p id="detail-copy">四栋教学楼前后分列，后排7层副楼连接中央高楼；2—5层有开放连廊。食宿楼临左前球场及马路，花园和后球场位于7层楼后。</p>
+            <div class="detail-tags" id="detail-tags"><span>可旋转</span><span>可缩放</span><span>可点选</span></div>
+          </section>
+          <p class="review-note">部分楼名、尺寸与场地比例仍待学校核对。</p>
+        </aside>
+
+        <section class="viewer" id="viewer" aria-label="可交互三维校园">
+          <canvas id="campus-canvas" tabindex="0" aria-label="校园三维沙盘，可用鼠标拖动旋转、滚轮缩放；也可使用下方视角按钮"></canvas>
+          <div id="labels" class="labels" aria-label="场景标注"></div>
+          <div class="viewer-topline"><div class="view-caption"><span class="caption-line"></span><span id="view-caption">校园总览</span></div><div class="viewer-tools"><button class="icon-button is-on" id="labels-button" type="button" aria-pressed="true" title="显示或隐藏场所名称" aria-label="显示或隐藏场所名称">名称</button><button class="icon-button" id="fullscreen-button" type="button" title="全屏查看" aria-label="全屏查看"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5" stroke="currentColor" stroke-width="1.6"/></svg></button></div></div>
+          <div class="loading" id="loading"><span class="loading-ring"></span><strong>正在打开校园</strong><small>稍等一下，新的视角就来了。</small></div>
+          <div class="fallback" id="fallback" hidden><h2>当前浏览器暂不能显示三维校园</h2><p id="fallback-copy">请使用支持三维显示的浏览器，或查看校园静态预览。</p><a href="./poster.png" target="_blank" rel="noopener">查看静态预览 ↗</a><button id="retry-button" type="button">重新打开</button></div>
+          <div class="viewer-bottom"><div class="view-tabs" role="group" aria-label="切换观看角度"><button type="button" data-view="hero" class="active" aria-pressed="true">总览</button><button type="button" data-view="top" aria-pressed="false">俯视</button><button type="button" data-view="front" aria-pressed="false">正面</button><button type="button" data-view="rear" aria-pressed="false">后区</button><button type="button" data-view="track" aria-pressed="false">跑道</button></div><button class="orbit-button" id="orbit-button" type="button" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M19.6 8.4A8 8 0 1 0 20 15M20 4v5h-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>缓慢环绕</span></button></div>
+          <div class="interaction-hint" id="interaction-hint"><span class="mouse-symbol" aria-hidden="true"></span><span id="hint-text">拖动旋转 · 滚轮缩放 · 点击建筑</span></div>
+        </section>
+      </main>
+      <footer class="footer"><span>香江路校区 · 三维校园预览</span><span>中央尖顶 / 六层左侧楼 / 250米跑道</span></footer>
+    </div>
+    <noscript><p>请启用 JavaScript 查看三维校园，或打开 <a href="./poster.png">静态校园预览</a>。</p></noscript>
+  </body>
+</html>
