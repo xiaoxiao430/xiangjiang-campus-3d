@@ -11,7 +11,8 @@ const palette = {
   track: '#b97055', pitch: '#8d9c73', line: '#f2e8d4', dining: '#ccb58f',
   metal: '#718278', gold: '#b69b67', trunk: '#87745b',
   seating: '#5f876e', canopy: '#dfcba3',
-  hedge: '#738c62', garden: '#afbd91', pavilionWood: '#86513d', pavilionRoof: '#78817b',
+  hedge: '#607d48', hedgeLight:'#7e9256', garden: '#a8b98a', soil:'#796d4e',
+  flowerCream:'#eee5c5',flowerGold:'#c99b54',pavilionWood: '#86513d', pavilionRoof: '#78817b',
   asphalt: '#a1aaa5', roadBase: '#bdc3bb',
 };
 
@@ -186,8 +187,8 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
   const gazebo=garden?.gazebo;
   const track = deriveTrackDimensions(trackConfig);
   const trackCenter = trackConfig.position || [baseMaxX-track.outerRadius-2.4,baseCenterZ];
-  const insideTrack = (x, z, extra = 1.6) => Math.abs(x - trackCenter[0]) < track.outerRadius + extra
-    && Math.abs(z - trackCenter[1]) < track.outerLength / 2 + extra;
+  const insideTrack = (x, z, extra = 1.6) => Math.hypot(x-trackCenter[0],
+    Math.max(0,Math.abs(z-trackCenter[1])-track.straightLength/2))<track.outerRadius+extra;
   let pathIndex = 0;
   for (const path of config.paths || []) {
     for (let i = 1; i < path.points.length; i += 1) {
@@ -482,8 +483,14 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
         description:'依据学校说明与实拍照片补充绿色台阶、平台、立柱及米色雨棚。尺寸和细节为简化表达。'});
   }
 
-  for (const [key, court] of Object.entries(config.sports || {})) {
-    if (!key.startsWith('basketball')) continue;
+  // The legacy pair describes broad front-field zones. Once explicit courts
+  // exist, render only the four lengthwise courts rather than doubling them.
+  const frontCourts=Array.isArray(config.sports?.front_courts)?config.sports.front_courts:[];
+  const courtEntries=frontCourts.length
+    ? [...frontCourts.map((court,i)=>[`front-court-${i+1}`,court]),
+       ...(config.sports?.basketball_rear?[['basketball_rear',config.sports.basketball_rear]]:[])]
+    : Object.entries(config.sports||{}).filter(([key])=>key.startsWith('basketball'));
+  for (const [key, court] of courtEntries) {
     const [x,z] = court.position;
     const [w,d] = court.size;
     const halfCourt=court.mode==='half';
@@ -498,6 +505,15 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
       box('trim',x,3.4,baseline-.4,1.7,1.0,.11);
       const hoop=new THREE.Mesh(new THREE.TorusGeometry(.29,.025,5,16),materials.courtInner);
       hoop.rotation.x=Math.PI/2;hoop.position.set(x,3.15,baseline-.85);campus.add(hoop);
+    }else if(court.orientation==='y'){
+      for(const side of [-1,1]){
+        box('courtInner',x,.405,z+side*(d/2-4.1),4.9,.02,6.1);
+        const hoopZ=z+side*(d/2-1.2);
+        box('metal',x,1.7,hoopZ,.14,3.0,.14);
+        box('trim',x,3.4,hoopZ-side*.35,1.7,1.0,.11);
+        const hoop=new THREE.Mesh(new THREE.TorusGeometry(.29,.025,5,16),materials.courtInner);
+        hoop.rotation.x=Math.PI/2;hoop.position.set(x,3.15,hoopZ-side*.68);campus.add(hoop);
+      }
     }else{
       for (const side of [-1,1]) {
         box('courtInner', x+side*(w/2-4.3), .405, z, 6.8, .02, 6.1);
@@ -534,8 +550,26 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
         return[x+Math.cos(angle)*1.65,.425,halfLine+Math.sin(angle)*1.65];
       }),markings));
     }else{
-      campus.add(line([[x,.42,z-d/2+.55],[x,.42,z+d/2-.55]],markings));
-      campus.add(line(ringPoints(x,z,2,48,.42),markings,true));
+      if(court.orientation==='y'){
+        campus.add(line([[x-w/2+.55,.42,z],[x+w/2-.55,.42,z]],markings));
+        for(const side of [-1,1]){
+          const baseline=z+side*(d/2-.55);
+          const hoopZ=baseline-side*.85;
+          const freeZ=baseline-side*5.8;
+          campus.add(line([[x-2.45,.425,baseline],[x-2.45,.425,freeZ],
+            [x+2.45,.425,freeZ],[x+2.45,.425,baseline]],markings));
+          campus.add(line(Array.from({length:65},(_,i)=>{
+            const a=-Math.PI/2+i*Math.PI/64;
+            return[x+Math.sin(a)*6.25,.425,hoopZ-side*Math.cos(a)*6.25];
+          }),markings));
+          for(const sign of [-1,1])campus.add(line([[x+sign*6.25,.425,baseline],[x+sign*6.25,.425,hoopZ]],markings));
+          campus.add(line(Array.from({length:33},(_,i)=>{
+            const a=-Math.PI/2+i*Math.PI/32;
+            return[x+Math.sin(a)*1.7,.425,freeZ-side*Math.cos(a)*1.7];
+          }),markings));
+        }
+      }else campus.add(line([[x,.42,z-d/2+.55],[x,.42,z+d/2-.55]],markings));
+      campus.add(line(ringPoints(x,z,1.7,48,.42),markings,true));
     }
     if(key==='basketball_rear'){
       landmarkData.push({id:'basketball-rear',name:court.name||'后侧篮球场',
@@ -627,22 +661,85 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
   const statueHead=new THREE.Mesh(new THREE.SphereGeometry(.42,12,8),materials.stone);
   statueHead.position.set(0,4,-13);statueHead.castShadow=true;campus.add(statueHead);
 
-  const trees=(config.trees || []).filter(([x,z]) => !insideTrack(x,z,.7)
+  const trees=(config.trees || []).filter(([x,z]) => !insideTrack(x,z,.5)
     && (!gazebo || Math.hypot(x-gazebo.position[0],z-gazebo.position[1])>gazebo.radius+1.5));
-  const trunkGeometry=new THREE.CylinderGeometry(.18,.24,2.8,7);
+  const trunkGeometry=new THREE.CylinderGeometry(.18,.25,1,7);
   const leafGeometry=new THREE.IcosahedronGeometry(1,1);
-  const treeMaterials=['#718561','#869460','#667e5d'].map(color=>new THREE.MeshStandardMaterial({color,roughness:.95}));
+  const treeMaterials=['#4f6c42','#72874e','#5d7a49'].map(color=>new THREE.MeshStandardMaterial({color,roughness:.97}));
   const dummy=new THREE.Object3D();
-  const trunks=new THREE.InstancedMesh(trunkGeometry,materials.trunk,trees.length);
+  const trunks=new THREE.InstancedMesh(trunkGeometry,materials.trunk,trees.length*3);
   trunks.castShadow=true;
-  trees.forEach(([x,z],i)=>{dummy.position.set(x,1.5,z);dummy.scale.set(1,1,1);dummy.updateMatrix();trunks.setMatrixAt(i,dummy.matrix);box('stone',x,.15,z,3.3,.3,3.3);});
+  const canopyParts=[[],[],[]];
+  trees.forEach(([x,z],i)=>{
+    const compact=x>109;
+    const avenue=Math.abs(Math.abs(x)-7.3)<.2;
+    const radius=compact?1.1:avenue?1.80:2.08+(i%4)*.10;
+    const trunkHeight=compact?3.0:avenue?3.7:2.8+(i%3)*.26;
+    dummy.position.set(x,trunkHeight/2+.12,z);dummy.rotation.set(0,0,0);
+    dummy.scale.set(1,trunkHeight,1);dummy.updateMatrix();trunks.setMatrixAt(i*3,dummy.matrix);
+    for(const [j,sign] of [[1,-1],[2,1]]){
+      dummy.position.set(x+sign*.34,trunkHeight-.25,z+(i%2?sign*.20:0));
+      dummy.rotation.set(0,(i%3)*.7,sign*.55);dummy.scale.set(.50,1.3,.50);
+      dummy.updateMatrix();trunks.setMatrixAt(i*3+j,dummy.matrix);
+    }
+    // Overlapping rounded lobes give a broad, irregular crown, rather than
+    // stretching one sphere into the old egg-shaped tree silhouette.
+    const lobes=[[0,1.02,0,.88,.72,.88],[-.61,.65,.12,.66,.63,.67],
+      [.55,.63,-.14,.68,.61,.68],[.02,1.57,.08,.66,.66,.64]];
+    for(const [dx,dy,dz,sx,sy,sz] of lobes)canopyParts[i%3].push({
+      x:x+dx*radius,y:trunkHeight+dy*radius*.62,z:z+dz*radius,
+      sx:sx*radius,sy:sy*radius,sz:sz*radius,rotation:i*.71});
+    // Circular tree pits match the avenue photos; perimeter trees grow in lawn.
+    if(avenue)box('stone',x,.12,z,2.55,.20,2.55);
+  });
+  trunks.instanceMatrix.needsUpdate=true;
   campus.add(trunks);
   for(let t=0;t<3;t+=1){
-    const items=trees.filter((_,i)=>i%3===t);
+    const items=canopyParts[t];
     const leaves=new THREE.InstancedMesh(leafGeometry,treeMaterials[t],items.length);
     leaves.castShadow=leaves.receiveShadow=true;
-    items.forEach(([x,z],i)=>{dummy.position.set(x,3.9+(i%2)*.18,z);dummy.scale.set(1.85,2.45,1.75);dummy.rotation.set(0,i*.4,0);dummy.updateMatrix();leaves.setMatrixAt(i,dummy.matrix);});
+    items.forEach((p,i)=>{dummy.position.set(p.x,p.y,p.z);dummy.scale.set(p.sx,p.sy,p.sz);
+      dummy.rotation.set(0,p.rotation,0);dummy.updateMatrix();leaves.setMatrixAt(i,dummy.matrix);});
+    leaves.instanceMatrix.needsUpdate=true;
     campus.add(leaves);
+  }
+  const plantings=config.landscape?.plantings||[];
+  const shrubParts=[];const flowerParts=[[],[]];
+  for(const patch of plantings){
+    const [px,pz]=patch.position;const [pw,pd]=patch.size;
+    const baseHeight=patch.base_height||.14;const height=patch.height||.65;
+    if(patch.kind==='flowerbed'){
+      box('soil',px,baseHeight+.07,pz,pw,.14,pd);
+      box('hedge',px,baseHeight+.16,pz,pw,.18,pd);
+      const columns=Math.max(2,Math.floor(pw/1.15));const rows=Math.max(1,Math.floor(pd/.8));
+      for(let row=0;row<rows;row+=1)for(let column=0;column<columns;column+=1){
+        const xx=px-pw/2+(column+.5)*pw/columns;
+        const zz=pz-pd/2+(row+.5)*pd/rows;
+        flowerParts[(row+column)%2].push([xx,baseHeight+height,zz,.14+(column%3)*.025]);
+      }
+    }else{
+      box('hedge',px,baseHeight+height*.43,pz,pw,height*.86,pd);
+      const count=Math.max(2,Math.ceil(Math.max(pw,pd)/1.2));
+      for(let i=0;i<count;i+=1){
+        const offset=(i+.5)/count-.5;
+        shrubParts.push([px+(pw>=pd?offset*pw:0),baseHeight+height*.82,
+          pz+(pd>pw?offset*pd:0),Math.min(pw,pd)*.55,height*.34]);
+      }
+    }
+  }
+  if(shrubParts.length){
+    const shrubs=new THREE.InstancedMesh(leafGeometry,materials.hedgeLight,shrubParts.length);
+    shrubs.castShadow=shrubs.receiveShadow=true;
+    shrubParts.forEach(([x,y,z,r,ry],i)=>{dummy.position.set(x,y,z);dummy.rotation.set(0,i*.6,0);
+      dummy.scale.set(r,ry,r);dummy.updateMatrix();shrubs.setMatrixAt(i,dummy.matrix);});
+    shrubs.instanceMatrix.needsUpdate=true;campus.add(shrubs);
+  }
+  for(const [index,key] of ['flowerCream','flowerGold'].entries()){
+    if(!flowerParts[index].length)continue;
+    const flowers=new THREE.InstancedMesh(leafGeometry,materials[key],flowerParts[index].length);
+    flowerParts[index].forEach(([x,y,z,r],i)=>{dummy.position.set(x,y,z);dummy.rotation.set(0,i,0);
+      dummy.scale.set(r,r*.65,r);dummy.updateMatrix();flowers.setMatrixAt(i,dummy.matrix);});
+    flowers.instanceMatrix.needsUpdate=true;campus.add(flowers);
   }
   const fenceEnd=baseMaxX-3;
   const fenceZ=baseMinZ+5;
@@ -799,6 +896,12 @@ export async function createCampusScene({ canvas, config: suppliedConfig, onSele
     getLandmarks,
     getStats(){return{drawCalls:renderer.info.render.calls,triangles:renderer.info.render.triangles,
       buildings:(config.buildings||[]).length,trackLap:track.lapLength,trackMeasuredLap:track.measuredLap,
+      frontCourtCount:frontCourts.length||courtEntries.filter(([key])=>key!=='basketball_rear').length,
+      frontCourtOrientations:frontCourts.map(c=>c.orientation||'x'),
+      frontCourts:frontCourts.map(c=>({id:c.id,position:c.position,size:c.size,orientation:c.orientation,hoopCount:2})),
+      trees:trees.length,treeCount:trees.length,treeCanopyLobes:trees.length*4,
+      plantings:{count:plantings.length,hedges:plantings.filter(p=>p.kind!=='flowerbed').length,
+        flowerbeds:plantings.filter(p=>p.kind==='flowerbed').length},
       trackLapLength:track.lapLength,cafeteriaFloors:[1,2],
       buildingDetails:(config.buildings||[]).map(b=>({id:b.id,floors:b.floors,floorUsage:b.floor_usage||{}})),
       groundFloorOpenIds:(config.buildings||[]).filter(b=>b.kind==='classroom'&&b.ground_floor_open?.enabled===true).map(b=>b.id),

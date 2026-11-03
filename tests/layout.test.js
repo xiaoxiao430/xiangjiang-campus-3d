@@ -126,3 +126,17 @@ test('the widened oval preserves the 250 metre lap', () => {
   assert.ok(t.outerWidth>=50);
   assert.ok(Math.abs(t.measuredLap-250)<1e-8);
 });
+
+test('four portrait front courts replace the former two landscape courts', () => {
+  assert.equal(config.sports.front_courts.length,4);
+  for(const court of config.sports.front_courts){assert.equal(court.orientation,'y');assert.ok(court.size[1]>court.size[0]);}
+});
+
+test('photo-guided landscaping stays clear of building footprints', () => {
+  assert.ok(config.trees.length>=60);
+  assert.ok(config.landscape.plantings.length>=10);
+  for(const [x,y] of config.trees)for(const b of config.buildings){
+    const [bx,by]=b.position,[w,d]=b.size;
+    assert.equal(x>bx-w/2-.3&&x<bx+w/2+.3&&y>by-d/2-.3&&y<by+d/2+.3,false);
+  }
+});

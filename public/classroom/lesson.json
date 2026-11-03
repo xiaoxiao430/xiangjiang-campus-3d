@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "title": "My School",
+  "subtitle": "From a map to our campus.",
+  "grade": "七年级英语 · 校园主题拓展",
+  "duration_minutes": 20,
+  "language": "bilingual",
+  "goals": [
+    "Name familiar places in our school.",
+    "Ask and answer “Where is …?” with in front of, behind, between and on.",
+    "Give a simple route and introduce our school in three sentences."
+  ],
+  "labels": {
+    "central-tower": {
+      "en": "Main Building",
+      "zh": "中央高楼"
+    },
+    "left-side": {
+      "en": "Dining Hall & Dormitory",
+      "zh": "食堂及住宿楼"
+    },
+    "left-front": {
+      "en": "Front Teaching Building A",
+      "zh": "左侧教学楼"
+    },
+    "right-front": {
+      "en": "Front Teaching Building B",
+      "zh": "右侧教学楼"
+    },
+    "left-rear": {
+      "en": "Rear Teaching Building A",
+      "zh": "左后副楼"
+    },
+    "right-rear": {
+      "en": "Rear Teaching Building B",
+      "zh": "右后副楼"
+    },
+    "track": {
+      "en": "Running Track",
+      "zh": "250米跑道"
+    },
+    "grandstand": {
+      "en": "Event Stage",
+      "zh": "主席台"
+    },
+    "garden": {
+      "en": "Garden & Pavilion",
+      "zh": "花园与凉亭"
+    },
+    "basketball-rear": {
+      "en": "Half Basketball Court",
+      "zh": "副楼后半场"
+    }
+  },
+  "vocabulary": [
+    {
+      "en": "teaching building",
+      "zh": "教学楼"
+    },
+    {
+      "en": "dining hall",
+      "zh": "食堂"
+    },
+    {
+      "en": "running track",
+      "zh": "跑道"
+    },
+    {
+      "en": "garden",
+      "zh": "花园"
+    },
+    {
+      "en": "in front of",
+      "zh": "在……前面"
+    },
+    {
+      "en": "behind",
+      "zh": "在……后面"
+    },
+    {
+      "en": "between",
+      "zh": "在……之间"
+    },
+    {
+      "en": "near",
+      "zh": "在……附近"
+    },
+    {
+      "en": "on",
+      "zh": "在……上面"
+    },
+    {
+      "en": "go straight",
+      "zh": "直走"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "map-to-school",
+      "title": "Watch & discover",
+      "question": "What can you see in our school?",
+      "instruction": "点击“平面变立体”，看校园从平面展开。说出你认识的校园场所。",
+      "focus": "central-tower",
+      "answer": "I can see teaching buildings, a dining hall, a garden and a running track.",
+      "teacher_note": "导入1分钟：先观察俯视布局，再看立体展开。请学生说出熟悉的场所；这是基于本校制作的原创校园主题拓展，并非原抖音逐帧复刻。",
+      "minutes": 1,
+      "action": "reveal"
+    },
+    {
+      "id": "name-places",
+      "title": "Name the places",
+      "question": "Which place is for running?",
+      "instruction": "先看跑道，再选择正确的英文名称。词汇卡片可点开中文。",
+      "focus": "track",
+      "answer": "It is the running track.",
+      "teacher_note": "词汇2分钟：带读teaching building、dining hall、garden、running track，再让学生在模型中找对应位置。",
+      "minutes": 2,
+      "choices": [
+        "The dining hall.",
+        "The running track.",
+        "The garden."
+      ],
+      "correct_choice": 1,
+      "feedback": "Running track 表示跑道。我们的校园跑道为250米。"
+    },
+    {
+      "id": "find-lily",
+      "title": "Find a classmate",
+      "question": "Where is Lily?",
+      "instruction": "点击定位后自动暂停。观察Lily与中央高楼的关系，用in front of作答。",
+      "focus": "student-lily",
+      "answer": "Lily is in front of the main building.",
+      "teacher_note": "观察2分钟：先固定正面观察方向，再定位Lily；她始终沿中央高楼前方中轴通道活动。需要时可手动继续行走。",
+      "minutes": 2,
+      "pause_on_focus": true
+    },
+    {
+      "id": "dining-hall",
+      "title": "Find the dining hall",
+      "question": "Where is the dining hall?",
+      "instruction": "查看临左侧马路的食堂住宿楼，选择食堂所在的楼层。",
+      "focus": "left-side",
+      "answer": "The dining hall is on the first and second floors of the dining and dormitory building.",
+      "teacher_note": "观察2分钟：一至二楼是食堂，三至六楼是住宿区。on the first and second floors可作拓展表达。",
+      "minutes": 2,
+      "choices": [
+        "On the first and second floors.",
+        "On the fifth and sixth floors.",
+        "On the roof."
+      ],
+      "correct_choice": 0,
+      "feedback": "食堂在这栋6层楼的一至二层。"
+    },
+    {
+      "id": "garden",
+      "title": "Look behind",
+      "question": "Where is the garden?",
+      "instruction": "从后区观察：花园在左后7层副楼的哪一侧？",
+      "focus": "garden",
+      "answer": "The garden is behind Rear Teaching Building A.",
+      "teacher_note": "方位2分钟：先固定校园正面朝向说明前后，再观察副楼后面的花园与凉亭。这里的behind以校园正面为参照，不随镜头旋转改变。",
+      "minutes": 2,
+      "choices": [
+        "In front of Rear Teaching Building A.",
+        "On Rear Teaching Building A.",
+        "Behind Rear Teaching Building A."
+      ],
+      "correct_choice": 2,
+      "feedback": "花园与凉亭位于左后7层副楼后方。"
+    },
+    {
+      "id": "sam",
+      "title": "Look between",
+      "question": "Where is Sam?",
+      "instruction": "定位并暂停，观察内侧开放连廊上的Sam，练习on和between。",
+      "focus": "student-sam",
+      "answer": "Sam is on the open walkway between the two teaching buildings.",
+      "teacher_note": "方位2分钟：Sam在左侧二层内侧连廊上；请学生先说on the walkway，再补充between the two teaching buildings。",
+      "minutes": 2,
+      "pause_on_focus": true
+    },
+    {
+      "id": "find-tom",
+      "title": "Find the runner",
+      "question": "Where is Tom?",
+      "instruction": "找到跑道上的Tom，尝试问答；可先暂停，再继续观察他沿跑道行走。",
+      "focus": "student-tom",
+      "answer": "Tom is on the running track.",
+      "teacher_note": "巩固2分钟：两人一问一答。恢复行走后再次暂停，核对Tom仍在跑道上。跑道周长保持250米。",
+      "minutes": 2,
+      "pause_on_focus": true
+    },
+    {
+      "id": "directions",
+      "title": "Be a school guide",
+      "question": "How can we get to the main building?",
+      "instruction": "想象你站在校园正门面向高楼，沿中间的通道指一指，再说出路线。",
+      "focus": "central-tower",
+      "answer": "Go straight along the central path. The main building is ahead.",
+      "teacher_note": "问路3分钟：用固定正面视角，从正门沿中轴通道到中央高楼。先让学生指路线，再练习Go straight；不把镜头左右当成行走者左右。",
+      "minutes": 3,
+      "view": "front"
+    },
+    {
+      "id": "pair-work",
+      "title": "Ask & answer",
+      "question": "Can you help a new student find the garden?",
+      "instruction": "两人一组，一人扮演新同学，一人做向导。先隐藏参考表达，用behind说明花园位置。",
+      "focus": "garden",
+      "answer": "A: Excuse me. Where is the garden?\nB: It is behind Rear Teaching Building A.\nA: Thank you!\nB: You are welcome.",
+      "teacher_note": "对话3分钟：先中英对照示范，再切换English标签；交换角色，让学生自己选择另一个真实场所继续问答。参考表达是一种答案。",
+      "minutes": 3
+    },
+    {
+      "id": "exit-ticket",
+      "title": "Introduce our school",
+      "question": "Can you introduce our school in three sentences?",
+      "instruction": "选3个校园场所，每个说一句。至少使用一个方位词，最后对照示例自查。",
+      "focus": "central-tower",
+      "answer": "The main building is between the two rear teaching buildings.\nThe garden is behind Rear Teaching Building A.\nThe dining hall is on the first and second floors of the dining and dormitory building.",
+      "teacher_note": "离堂1分钟：检查是否说出场所、方位与完整句子。允许不同的正确表达，不要求照读示例。",
+      "minutes": 1,
+      "view": "hero"
+    }
+  ],
+  "defaults": {
+    "show_students": true,
+    "playing": true,
+    "speed": 1,
+    "show_labels": true
+  },
+  "source_note": "原创校园主题拓展：借鉴“平面图立成立体校园”的展示创意，基于学校提供的校园说明和实景参考制作。人教社七上配套目录有Unit 3 My School；未取得原抖音视频画面，不对应教材具体页码或原片台词。",
+  "sources": [
+    {
+      "title": "用户提供的抖音原页（未能播放）",
+      "url": "https://www.douyin.com/video/7702442406142334139"
+    },
+    {
+      "title": "人教社七上官方配套资源目录",
+      "url": "https://www.pep.com.cn/zslth/yyptzy/czyy/7s/"
+    },
+    {
+      "title": "校园全景参考",
+      "url": "https://www.720yun.com/t/aceju5mwzn5?scene_id=113697963"
+    }
+  ]
+}
